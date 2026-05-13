@@ -14,4 +14,17 @@ export const orderStep1Schema = z.object({
     .min(1, 'Adicione ao menos 1 item'),
 });
 
+export const orderPaymentFormSchema = z.object({
+  paymentMethodId: z.string().min(1, 'Selecione uma forma de pagamento'),
+  installments: z.number().int().min(1, 'Mínimo de 1 parcela'),
+  amount: z.number().positive('Valor deve ser maior que zero'),
+});
+
+export const orderStep2Schema = z.object({
+  payments: z
+    .array(orderPaymentFormSchema)
+    .min(1, 'Adicione ao menos um pagamento'),
+});
+
 export type OrderStep1FormData = z.infer<typeof orderStep1Schema>;
+export type OrderStep2FormData = z.infer<typeof orderStep2Schema>;
