@@ -15,7 +15,12 @@ import {
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useMemo, useState } from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import {
+  Controller,
+  useFieldArray,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -118,7 +123,6 @@ export function OrderFormPage() {
   const {
     control: step1Control,
     handleSubmit: handleStep1Submit,
-    watch: watchStep1,
     setValue: setStep1Value,
     formState: { errors: step1Errors },
   } = step1Form;
@@ -126,7 +130,6 @@ export function OrderFormPage() {
   const {
     control: step2Control,
     handleSubmit: handleStep2Submit,
-    watch: watchStep2,
     setValue: setStep2Value,
     formState: { errors: step2Errors },
   } = step2Form;
@@ -149,8 +152,15 @@ export function OrderFormPage() {
     name: 'payments',
   });
 
-  const watchedItems = watchStep1('items');
-  const watchedPayments = watchStep2('payments');
+  const watchedItems = useWatch({
+    control: step1Control,
+    name: 'items',
+  });
+
+  const watchedPayments = useWatch({
+    control: step2Control,
+    name: 'payments',
+  });
 
   const itemRows: OrderItemRow[] = itemFields.map((field, index) => {
     const item = watchedItems[index];

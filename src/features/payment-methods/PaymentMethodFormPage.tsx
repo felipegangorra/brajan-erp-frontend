@@ -11,7 +11,7 @@ import {
   Typography,
   message,
 } from 'antd';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { useAppDispatch } from '../../app/hooks';
@@ -40,7 +40,6 @@ export function PaymentMethodFormPage() {
   const {
     control,
     handleSubmit,
-    watch,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<PaymentMethodFormData>({
@@ -53,7 +52,10 @@ export function PaymentMethodFormPage() {
     },
   });
 
-  const selectedType = watch('type');
+  const selectedType = useWatch({
+  control,
+  name: 'type',
+  });
   const isCreditCard = selectedType === 'credit_card';
 
   function handleTypeChange(type: PaymentMethodType) {
